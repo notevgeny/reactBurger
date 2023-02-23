@@ -1,5 +1,5 @@
 import style from './order.module.css';
-import {OrderGoods} from './OrderGoods/OrderGoods'
+import { OrderGoods } from './OrderGoods/OrderGoods'
 
 export const Order = () => {
 
