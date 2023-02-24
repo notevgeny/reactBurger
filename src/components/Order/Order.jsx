@@ -1,9 +1,18 @@
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchOrderList } from '../../store/order/orderSlice';
+import { openModal } from '../../store/modalDelivery/modalDeliverySlice'
 import style from './order.module.css';
 import { OrderGoods } from './OrderGoods/OrderGoods'
 
 export const Order = () => {
 
-  const orderList = ['Супер сырный', 'Картошка фри', 'Жгучий хот-дог'];
+  const { totalPrice, totalCount, orderList, orderGoods } = useSelector(state => state.order);
+  const dispatch = useDispatch() 
+
+  useEffect(() => {
+    dispatch(fetchOrderList())
+  }, [orderList.length])
 
   return (
     <div className={style.order}>
@@ -11,23 +20,30 @@ export const Order = () => {
         <div className={style.header} tabIndex="0" role="button">
           <h2 className={style.title}>Корзина</h2>
 
-          <span className={style.count}>4</span>
+          <span className={style.count}>{totalCount}</span>
         </div>
 
         <div className={style.wrap_list}>
           <ul className={style.list}>
-            {orderList.map((item, index) => <OrderGoods key={index} title={item}/>)}
+            {orderGoods.map((item) => <OrderGoods key={item.id} {...item}/>)}
           </ul>
 
           <div className={style.total}>
             <p>Итого</p>
             <p>
-              <span className={style.amount}>1279</span>
-              <span className={style.currency}>₽</span>
+              <span className={style.amount}>{totalPrice}</span>
+              <span className={style.currency}>&nbsp;₽</span>
             </p>
           </div>
 
-          <button className={style.submit}>Оформить заказ</button>
+          <button 
+            className={style.submit}
+            disabled={orderGoods.length === 0}
+            onClick={() => {
+              dispatch(openModal())
+            }}
+          >
+            Оформить заказ</button>
 
           <div className={style.apeal}>
             <p className={style.text}>Бесплатная доставка</p>
